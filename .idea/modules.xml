@@ -3,7 +3,8 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/gcit.iml" filepath="$PROJECT_DIR$/.idea/modules/gcit.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/gcit.app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/gcit.app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/gcit-done/gcit.gcit-done.iml" filepath="$PROJECT_DIR$/.idea/modules/gcit-done/gcit.gcit-done.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/gcit-start/gcit.gcit-start.iml" filepath="$PROJECT_DIR$/.idea/modules/gcit-start/gcit.gcit-start.iml" />
     </modules>
   </component>
 </project>
