@@ -1,15 +1,13 @@
 package com.example.android.gcit
 
-import java.util.*
-
 fun CovidDatum.prettyPrint(): String {
 
     if (this.country == null) {
-        return "No data available right now, please try again later."
+        return "Could not retrieve data, please try again later."
     }
-    var confirmed: Int = 0
-    var recovered: Int = 0
-    var active: Int = 0
+    var confirmed = 0
+    var recovered = 0
+    var active = 0
 
     provinces?.let {
          for (province in it) {

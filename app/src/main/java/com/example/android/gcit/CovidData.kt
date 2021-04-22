@@ -12,7 +12,7 @@ class CovidDatum: Serializable {
 
     @SerializedName("provinces")
     @Expose
-    var provinces: kotlin.collections.List<Province>? = null
+    var provinces: List<Province>? = null
 
     @SerializedName("latitude")
     @Expose

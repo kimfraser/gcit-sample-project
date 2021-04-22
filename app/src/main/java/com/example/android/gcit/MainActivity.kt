@@ -21,29 +21,27 @@ import okhttp3.Response
 import java.util.*
 
 
-class MainActivity : AppCompatActivity(), CountryRecyclerViewAdapter.CountryDataInterface, DatePickerDialogFragment.DatePickerInterface, Task.AsyncResponse {
+class MainActivity : AppCompatActivity(), CountryRecyclerViewAdapter.CountryDataInterface, DatePickerDialogFragment.DatePickerInterface {
 
     var countrySelected: Country? = null
     var dateSelected: GregorianCalendar? = null
     lateinit var backgroundTask: AsyncTask<String?, Void?, Response?>
 
-    var data: CovidDatum? = null
-
     lateinit var countrySelectedTextView: TextView
     lateinit var dateSelectedTextView: TextView
+    lateinit var countryListView: RecyclerView
+    lateinit var dateButton: Button
+    lateinit var submit: Button
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val title: TextView = findViewById(R.id.title)
-        val countryListView: RecyclerView = findViewById(R.id.countryListView)
+        countryListView = findViewById(R.id.countryListView)
         countrySelectedTextView = findViewById(R.id.countrySelected)
-        val dateLabel: TextView = findViewById(R.id.dateLabel)
         dateSelectedTextView = findViewById(R.id.dateSelected)
-        val dateButton: Button = findViewById(R.id.dateButton)
-        val submit: Button = findViewById(R.id.submit)
-
+        dateButton = findViewById(R.id.dateButton)
+        submit = findViewById(R.id.submit)
 
         // Create country list
         val countries: MutableList<Country> = mutableListOf()
@@ -99,7 +97,7 @@ class MainActivity : AppCompatActivity(), CountryRecyclerViewAdapter.CountryData
 
             }
 
-            // Make API Call, redirect to other page
+            // Make API Call
             val params = arrayOf<String>(DateFormat.format("yyyy-MM-dd", dateSelected).toString(), countrySelected!!.countryName)
             backgroundTask = Task(object : Task.AsyncResponse {
                 override fun processFinish(output: CovidDatum) {
@@ -125,14 +123,6 @@ class MainActivity : AppCompatActivity(), CountryRecyclerViewAdapter.CountryData
         dateSelectedTextView.visibility = View.VISIBLE
         dateSelectedTextView.text = DateFormat.format("yyyy-MM-dd", dateSelected)
     }
-
-    private fun isDataValid() {
-        // TODO: check if data is valid
-    }
-
-    override fun processFinish(output: CovidDatum) {
-        TODO("Not yet implemented")
-    }
 }
 
 private class Task(val delegate: AsyncResponse) : AsyncTask<String?, Void?, Response?>() {
@@ -144,7 +134,7 @@ private class Task(val delegate: AsyncResponse) : AsyncTask<String?, Void?, Resp
     override fun onPostExecute(result: Response?) {
         // error handling
         val stringBody = result?.body()?.string()
-        if (stringBody?.contains("Country not found") == true) {
+        if (stringBody?.contains("Country not found") == true || stringBody?.contains("not subscribed") == true) {
             val data = CovidDatum()
             delegate.processFinish(data)
         } else if (stringBody != null) {

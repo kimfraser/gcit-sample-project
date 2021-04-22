@@ -15,5 +15,4 @@
         android:paddingHorizontal="8dp"
         android:paddingVertical="8dp"
         tools:text="Trinidad and Tobago" />
-
 </LinearLayout>

@@ -4,16 +4,10 @@ import android.app.AlertDialog
 import android.app.DatePickerDialog
 import android.app.Dialog
 import android.content.Context
-import android.graphics.Color
 import android.os.Bundle
 import android.support.v4.app.DialogFragment
-import android.util.Log
-import android.util.TypedValue
-import android.view.Gravity
-import android.view.ViewGroup
 import android.widget.DatePicker
 import java.util.*
-import java.util.logging.Logger
 
 
 class DatePickerDialogFragment : DialogFragment(), DatePickerDialog.OnDateSetListener {
@@ -38,7 +32,7 @@ class DatePickerDialogFragment : DialogFragment(), DatePickerDialog.OnDateSetLis
         val dpd = DatePickerDialog(activity,
                 AlertDialog.THEME_HOLO_LIGHT, this, year, month, day)
 
-         dpd.setTitle("Please select a date")
+        dpd.setTitle("Please select a date")
 
         dpd.datePicker.maxDate = System.currentTimeMillis();
 
