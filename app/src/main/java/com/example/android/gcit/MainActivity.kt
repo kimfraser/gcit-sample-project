@@ -37,11 +37,9 @@ class MainActivity : AppCompatActivity(), CountryRecyclerViewAdapter.CountryData
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        countryListView = findViewById(R.id.countryListView)
-        countrySelectedTextView = findViewById(R.id.countrySelected)
-        dateSelectedTextView = findViewById(R.id.dateSelected)
-        dateButton = findViewById(R.id.dateButton)
-        submit = findViewById(R.id.submit)
+        setupViews()
+
+
 
         // Create country list
         val countries: MutableList<Country> = mutableListOf()
@@ -61,56 +59,72 @@ class MainActivity : AppCompatActivity(), CountryRecyclerViewAdapter.CountryData
         countryListView.adapter = countryRecyclerViewAdapter
         countryListView.layoutManager = LinearLayoutManager(this)
 
+
+        // Set click listener for enter button
+        submit.setOnClickListener {
+            if (dataIsValid()) {
+                // Make API Call
+                val params = arrayOf(DateFormat.format("yyyy-MM-dd", dateSelected).toString(), countrySelected!!.countryName)
+                backgroundTask = Task(object : Task.AsyncResponse {
+                    override fun processFinish(output: CovidDatum) {
+                        AlertDialog.Builder(this@MainActivity)
+                                .setMessage(output.prettyPrint())
+                                .setNeutralButton("OK", null)
+                                .create()
+                                .show()
+                    }
+                })
+                backgroundTask.execute(*params)
+            }
+        }
+    }
+
+    private fun setupViews() {
+        countryListView = findViewById(R.id.countryListView)
+        countrySelectedTextView = findViewById(R.id.countrySelected)
+        dateSelectedTextView = findViewById(R.id.dateSelected)
+        dateButton = findViewById(R.id.dateButton)
+        submit = findViewById(R.id.submit)
+
         // Set click listener for date picker button
         dateButton.setOnClickListener {
             val datePickerDialogFragment = DatePickerDialogFragment()
             datePickerDialogFragment.show(supportFragmentManager, "Date Picker")
         }
+    }
 
-        // Set click listener for enter button
-        submit.setOnClickListener {
-            if (countrySelected == null && dateSelected == null) {
-                AlertDialog.Builder(this)
-                        .setTitle("ERROR: Missing Country and Date")
-                        .setCancelable(false)
-                        .setMessage("Please select a country and date")
-                        .setNeutralButton("OK", null)
-                return@setOnClickListener
-            }
-
-            if (countrySelected == null) {
-                AlertDialog.Builder(this)
-                        .setTitle("ERROR: Missing Country")
-                        .setCancelable(false)
-                        .setMessage("Please select a country")
-                        .setNeutralButton("OK", null)
-                return@setOnClickListener
-            }
-
-            if (dateSelected == null) {
-                AlertDialog.Builder(this)
-                        .setTitle("ERROR: Missing Date")
-                        .setCancelable(false)
-                        .setMessage("Please select a date")
-                        .setNeutralButton("OK", null)
-                return@setOnClickListener
-
-            }
-
-            // Make API Call
-            val params = arrayOf<String>(DateFormat.format("yyyy-MM-dd", dateSelected).toString(), countrySelected!!.countryName)
-            backgroundTask = Task(object : Task.AsyncResponse {
-                override fun processFinish(output: CovidDatum) {
-                    AlertDialog.Builder(this@MainActivity)
-                            .setMessage(output.prettyPrint())
-                            .setNeutralButton("OK", null)
-                            .create()
-                            .show()
-                }
-            })
-            backgroundTask.execute(*params)
-
+    private fun dataIsValid(): Boolean {
+        if (countrySelected == null && dateSelected == null) {
+            AlertDialog.Builder(this)
+                    .setTitle("ERROR: Missing Country and Date")
+                    .setCancelable(false)
+                    .setMessage("Please select a country and date")
+                    .setNeutralButton("OK", null)
+                    .show()
+            return false
         }
+
+        if (countrySelected == null) {
+            AlertDialog.Builder(this)
+                    .setTitle("ERROR: Missing Country")
+                    .setCancelable(false)
+                    .setMessage("Please select a country")
+                    .setNeutralButton("OK", null)
+                    .show()
+            return false
+        }
+
+        if (dateSelected == null) {
+            AlertDialog.Builder(this)
+                    .setTitle("ERROR: Missing Date")
+                    .setCancelable(false)
+                    .setMessage("Please select a date")
+                    .setNeutralButton("OK", null)
+                    .show()
+            return false
+        }
+
+        return true
     }
 
     override fun getSelectedCountry(country: Country) {
