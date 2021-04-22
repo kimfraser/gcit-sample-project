@@ -39,20 +39,8 @@ class MainActivity : AppCompatActivity(), CountryRecyclerViewAdapter.CountryData
 
         setupViews()
 
-
-
         // Create country list
-        val countries: MutableList<Country> = mutableListOf()
-        val isoCountries: Array<String> = Locale.getISOCountries()
-        for (country in isoCountries) {
-            val locale = Locale("en", country)
-            val iso: String = locale.isO3Country
-            val code: String = locale.country
-            val name: String = locale.displayCountry
-            if (iso.isNotEmpty() && code.isNotEmpty() && name.isNotEmpty()) {
-                countries.add(Country(iso, name, code))
-            }
-        }
+        val countries: List<Country> = createCountryList()
 
         // Create adapter for recycler view
         val countryRecyclerViewAdapter = CountryRecyclerViewAdapter(countries, this)
@@ -125,6 +113,21 @@ class MainActivity : AppCompatActivity(), CountryRecyclerViewAdapter.CountryData
         }
 
         return true
+    }
+
+    private fun createCountryList(): List<Country> {
+        val countries: MutableList<Country> = mutableListOf()
+        val isoCountries: Array<String> = Locale.getISOCountries()
+        for (country in isoCountries) {
+            val locale = Locale("en", country)
+            val iso: String = locale.isO3Country
+            val code: String = locale.country
+            val name: String = locale.displayCountry
+            if (iso.isNotEmpty() && code.isNotEmpty() && name.isNotEmpty()) {
+                countries.add(Country(iso, name, code))
+            }
+        }
+        return countries
     }
 
     override fun getSelectedCountry(country: Country) {
